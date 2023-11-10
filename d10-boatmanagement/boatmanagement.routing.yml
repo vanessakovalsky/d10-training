@@ -1,0 +1,31 @@
+
+boatmanagement.boat_import_form:
+  path: '/boatmanagement/form/boat_import'
+  defaults:
+    _form: '\Drupal\boatmanagement\Form\BoatImportForm'
+    _title: 'BoatImportForm'
+  requirements:
+    _access: 'TRUE'
+    
+boatmanagement.import_boat_form:
+  path: '/boatmanagement/form/import_boat'
+  defaults:
+    _form: '\Drupal\boatmanagement\Form\ImportBoatForm'
+    _title: 'ImportBoatForm'
+  requirements:
+    _access: 'TRUE'
+
+boatmanagement.contact_proprietaire_form:
+  path: '/boatmanagement/form/contact_proprietaire'
+  defaults:
+    _form: '\Drupal\boatmanagement\Form\ContactProprietaireForm'
+    _title: 'ContactProprietaireForm'
+  requirements:
+    _access: 'TRUE'
+boatmanagement.import_bateau_form:
+  path: '/boatmanagement/form/import_bateau'
+  defaults:
+    _form: '\Drupal\boatmanagement\Form\ImportBateauForm'
+    _title: 'ImportBateauForm'
+  requirements:
+    _access: 'TRUE'

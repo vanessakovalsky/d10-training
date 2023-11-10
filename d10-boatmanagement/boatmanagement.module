@@ -1,0 +1,123 @@
+<?php
+
+/**
+ * @file
+ * Contains boatmanagement.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\node\Entity\Node;
+
+/**
+ * Implements hook_help().
+ */
+function boatmanagement_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the boatmanagement module.
+    case 'help.page.boatmanagement':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Boat management') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function boatmanagement_theme() {
+  return [
+    'boatmanagement' => [
+      'render element' => 'children',
+    ],
+    'form__boat_import_form' => [
+      'render element' => 'form',
+      'template' => 'form--boat-import-form'
+    ]
+  ];
+}
+
+function boatmanagement_form_alter(&$form, &$form_state, $form_id){
+  if($form_id == 'node_bateau_edit_form'){
+    $form['actions']['submit']['#submit'][] = 'bateau_edit_send_email';
+  }
+}
+
+function bateau_edit_send_email(&$form, &$form_state){
+  //On charge le service d'envoi de mail
+  $mailer = \Drupal::service('plugin.manager.mail');
+  // On récupère la langue de l'utilisateur cournat
+  $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
+  // On récupère le nom du site dans la config pour le mettre dans le sujet du mail
+  $site_name = \Drupal::config('system.site')->get('name');
+  //On récupère l'utilisateur actuellement connecté
+  $current_user = \Drupal::currentUser();
+  $expediteur = $current_user->getEmail();
+  //On construit le tableau avec les paramètres pour l'envoi du mail
+  $subject = t('Modification de votre fiche bateau');
+  $content = t('Votre fiche de bateau a été modifiée');
+  $params = array(
+    'message' => $content,
+    'subject' => $site_name.$subject,
+  );
+
+  //On récupère le noeud por trouver le propriétaire du bateau qui a été modifié
+  $node = Node::load($form_state->getValue('nid'));
+
+  //Le champ propriétaire contient une référence vers une entité User, il faut donc la chargé pour récupérer le mail du propriétaire
+  /** @var \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem $referenceItem */
+  if(!$node->get('field_proprietaire')->isEmpty()){
+    $referenceItem = $node->get('field_proprietaire')->first();
+
+    /** @var \Drupal\Core\Entity\Plugin\DataType\EntityReference $entityReference */
+    $entityReference = $referenceItem->get('entity');
+
+    /** @var \Drupal\Core\Entity\Plugin\DataType\EntityAdapter $entityAdapter */
+    $entityAdapter = $entityReference->getTarget();
+
+    /** @var \Drupal\Core\Entity\EntityInterface $referencedEntity */
+    $proprietaire = $entityAdapter->getValue();
+
+    $destinataire = $proprietaire->getEmail();
+    //On envoie le mail avec toutes les infos dont on a besoin
+    $mailer->mail('boatmanagement', 'bateau_edit_send_email', $destinataire, $langcode, $params, $expediteur, $send=NULL );
+  }
+}
+
+/**
+  * Implements hook_theme_suggestions_alter().
+  */
+ function boatmanagement_theme_suggestions_alter(array &$suggestions, array $variables, $hook)
+ {
+   if (isset($variables['element']) && isset($variables['element']['#type']) && $variables['element']['#type'] == 'form') {
+     $original_theme_hook = $variables['theme_hook_original'];
+     array_unshift($suggestions, $original_theme_hook . '__' . str_replace('-', '_', $variables['element']['#id']));
+   }
+ }
+
+function boatmanagement_views_data_alter(array &$data){
+    $data['node']['nodes_titles'] = array(
+        'title' => t('Node titles boat'),
+        'filter' => array(
+        'title' => t('Node titles'),
+        'help' => t('Specify a list of titles a node can have.'),
+        'field' => 'title',
+        'id' => 'd8views_node_titles'
+        ),
+    );
+}
+
+function boatmanagement_node_access($node, $op, $account){
+  if ($node->type->entity->label() == 'Boat'){
+    if ($op == 'update'){
+      if ($node->get('field_proprietaire')->getValue()[0]['target_id'] == $account->id()) {
+        return AccessResult::allowed();
+      }
+      else {
+        return AccessResult::forbidden();
+      }
+    }
+  }
+}
