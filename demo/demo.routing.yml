@@ -1,0 +1,7 @@
+demo.mapage:
+  path: '/demo/mapage'
+  defaults:
+    _controller: '\Drupal\demo\Controller\DemoController::mapage'
+    _title: 'Ma page'
+  requirements:
+    _access: 'TRUE'
