@@ -16,3 +16,8 @@ Il contient des exercices et leur corrections
 * [Responsive](exercice-responsive-design.md)
 
 ## Drupal Developpeur avancé
+
+* [Remplacer un service](exercice-replace-service.md)
+* [Evenement](exercice-evenement.md)
+* [Plugin](exercice-plugin.md)
+* [Entite de configuration](exercice-entite-config.md)
