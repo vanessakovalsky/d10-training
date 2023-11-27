@@ -17,3 +17,9 @@ Cet exercice a pour objectifs
 ## Remplacer un service exisant 
 
 * Créer une classe qui permet de fournir un service basé sur HttpFull (https://phphttpclient.com/) qui vient en remplacement du HttpClient (basé sur Guzzle) qui est fourni par le coeur de Drupal
+
+
+## Documentation
+
+* https://www.drupal.org/docs/drupal-apis/services-and-dependency-injection/services-and-dependency-injection-in-drupal-8
+* https://www.drupal.org/docs/drupal-apis/services-and-dependency-injection/structure-of-a-service-file 
