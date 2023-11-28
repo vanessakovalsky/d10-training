@@ -1,0 +1,5 @@
+services:
+  boat_contact_observer:
+    class: Drupal\boatmanagement\Service\ContactObserverService
+    tags:
+      - name: 'event_subscriber' 

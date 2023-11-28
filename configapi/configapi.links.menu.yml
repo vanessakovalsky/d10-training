@@ -1,0 +1,5 @@
+entity.configapi.collection:
+  title: 'configapi'
+  parent: system.admin_config_system
+  description: 'Configure configapi'
+  route_name: entity.configapi.collection

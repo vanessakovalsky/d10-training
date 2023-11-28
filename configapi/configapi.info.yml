@@ -1,0 +1,5 @@
+name : Config API
+description : 'Manage all configuration for calling API'
+package : Demo
+type: module
+core_version_requirement: ^10

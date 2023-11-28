@@ -1,0 +1,16 @@
+configapi.configapi.*:
+  type: config_entity
+  label: 'Config API config'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    url:
+      type: string
+      label: 'URL'
+    api_key:
+      type: string
+      label: 'API Key'

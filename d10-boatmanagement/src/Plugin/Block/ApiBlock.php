@@ -12,14 +12,14 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides a 'CalculAireBlock' block.
+ * Provides a 'APIBlock' block.
  *
  * @Block(
- *  id = "calcul_aire_block",
- *  admin_label = @Translation("Calcul aire block"),
+ *  id = "api_block",
+ *  admin_label = @Translation("API block"),
  * )
  */
-class CalculAireBlock extends BlockBase implements ContainerFactoryPluginInterface {
+class APIBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
    * Drupal\Core\Entity\EntityTypeManagerInterface definition.
@@ -70,33 +70,54 @@ class CalculAireBlock extends BlockBase implements ContainerFactoryPluginInterfa
    * {@inheritdoc}
    */
   public function build() {
+
+    $client = new \GuzzleHttp\Client(); // Drupal::service('http_client')
+    // Appel à l'API pour obtenir le code insee
+    // $node = $this->requestStack->getCurrentRequest()->attributes->get('node');
+    // $port_id = $node->get('field_port_d_attache')->referencedEntities();
+    // $code_postal = $port_id[0]->get('field_code_postal')->getValue()[0]['value'];
+
+    $config = \Drupal::config('configapi.configapi.test3');
+    $url = $config->get('url');
+    
+    $response = $client->request('GET','https://geo.api.gouv.fr/communes?codePostal='.$code_postal);
+    $content = $response->getBody()->getContents();
+    $code_insee = $content->code;
+
+    // Appel à l'API méteo
+    $client2 = new \GuzzleHttp\Client();
+
+    $response2 = $client2->request('GET','https://api.meteo-concept.com/api/ephemeride/1?insee='.$code_insee, [
+        'headers'=> [
+            "X-AUTH-TOKEN" =>  "09c3a5cd6afc91a28030ba1c55bb9da181b525ae96109e5caf9c1fe11bf5e2c4",
+            "Accept" =>  "application/json"
+        ]
+    ]);
+
+    $content = json_decode($response2->getBody()->getContents());
+    
     $build = [];
-      $node = $this->requestStack->getCurrentRequest()->attributes->get('node');
-      $largeur = $node->get('field_largeur')->getValue()[0]['value'];
-      $longueur = $node->get('field_longueur')->getValue()[0]['value'];
-      $aire = $longueur * $largeur;
-      $build['calcul_aire_block']['#markup'] = 'L\'aire du bateau est égale à :'.$aire;
-      // $build['calcul_aire_block']['#cache']['max-age'] = Cache::PERMANENT
+      $build['api_block']['#markup'] = 'Le code insee du port est :'.$code_insee;
     return $build;
   }
 
-  // public function getCacheTags() {
-  //   //With this when your node change your block will rebuild
-  //   if ($node = \Drupal::routeMatch()->getParameter('node')) {
-  //     //if there is node add its cachetag
-  //     return Cache::mergeTags(parent::getCacheTags(), array('node:' . $node->id()));
-  //   } else {
-  //     //Return default tags instead.
-  //     return parent::getCacheTags();
-  //   }
-  // }
+  public function getCacheTags() {
+    //With this when your node change your block will rebuild
+    if ($node = \Drupal::routeMatch()->getParameter('node')) {
+      //if there is node add its cachetag
+      return Cache::mergeTags(parent::getCacheTags(), array('node:' . $node->id()));
+    } else {
+      //Return default tags instead.
+      return parent::getCacheTags();
+    }
+  }
 
-  // public function getCacheContexts() {
-  //   //if you depends on \Drupal::routeMatch()
-  //   //you must set context of this block with 'route' context tag.
-  //   //Every new route this block will rebuild
-  //   return Cache::mergeContexts(parent::getCacheContexts(), array('route'));
-  // }
+  public function getCacheContexts() {
+    //if you depends on \Drupal::routeMatch()
+    //you must set context of this block with 'route' context tag.
+    //Every new route this block will rebuild
+    return Cache::mergeContexts(parent::getCacheContexts(), array('route'));
+  }
 	
   protected function blockAccess(AccountInterface $account) {
     return AccessResult::allowedIfHasPermission($account, 'administer demo_module_boat configuration');

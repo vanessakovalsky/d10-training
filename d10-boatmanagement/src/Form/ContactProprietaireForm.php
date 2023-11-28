@@ -4,6 +4,7 @@ namespace Drupal\boatmanagement\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\boatmanagement\Event\ContactProprietaireEvent;
 
 /**
  * Class ContactProprietaireForm.
@@ -64,6 +65,10 @@ class ContactProprietaireForm extends FormBase {
     foreach ($form_state->getValues() as $key => $value) {
       \Drupal::messenger()->addMessage($key . ': ' . ($key === 'text_format'?$value['value']:$value));
     }
+    $name = 'toto';
+    $event = new ContactProprietaireEvent($name);
+    $event_dispatcher = \Drupal::service('event_dispatcher');
+    $event_dispatcher->dispatch($event, ContactProprietaireEvent::NAME);
   }
 
 }

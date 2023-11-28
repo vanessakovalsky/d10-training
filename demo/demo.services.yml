@@ -1,0 +1,11 @@
+services:
+  demo_monservice:
+    class: Drupal\demo\Service\Monservice
+    arguments: ['@request_stack']
+  demo_translate_observer:
+    class: Drupal\demo\Service\TranslateObserverService
+    tags:
+      - name: 'event_subscriber' 
+  demo.plugin.manager.formation:
+    class: Drupal\demo\FormationPluginManager
+    parent: default_plugin_manager

@@ -28,4 +28,4 @@ boatmanagement.import_bateau_form:
     _form: '\Drupal\boatmanagement\Form\ImportBateauForm'
     _title: 'ImportBateauForm'
   requirements:
-    _access: 'TRUE'
+    _permission: 'administer demo_module_boat configuration'

@@ -5,3 +5,17 @@ demo.mapage:
     _title: 'Ma page'
   requirements:
     _access: 'TRUE'
+demo.monservice:
+  path: '/demo/monservice'
+  defaults:
+    _controller: '\Drupal\demo\Controller\DemoController::demoservice'
+    _title: 'Mon service'
+  requirements:
+    _access: 'TRUE'
+demo.monpluginvisio:
+  path: '/demo/monplugin'
+  defaults:
+    _controller: '\Drupal\demo\Controller\DemoController::demoplugin'
+    _title: 'Mon plugin'
+  requirements:
+    _access: 'TRUE'

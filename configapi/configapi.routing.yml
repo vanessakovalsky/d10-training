@@ -1,0 +1,31 @@
+entity.configapi.collection:
+  path: '/admin/config/system/configapi'
+  defaults:
+    _entity_list: 'configapi'
+    _title: 'Configuration des appels API'
+  requirements:
+    _permission: 'administer site configuration'
+
+entity.configapi.add_form:
+  path: '/admin/config/system/configapi/add'
+  defaults:
+    _entity_form: 'configapi.add'
+    _title: 'Add configapi'
+  requirements:
+    _permission: 'administer site configuration'
+
+entity.configapi.edit_form:
+  path: '/admin/config/system/configapi/{configapi}'
+  defaults:
+    _entity_form: 'configapi.edit'
+    _title: 'Edit configapi'
+  requirements:
+    _permission: 'administer site configuration'
+
+entity.configapi.delete_form:
+  path: '/admin/config/system/configapi/{configapi}/delete'
+  defaults:
+    _entity_form: 'configapi.delete'
+    _title: 'Delete configapi'
+  requirements:
+    _permission: 'administer site configuration'

@@ -20,6 +20,8 @@ class ContactProprietaireBlock extends BlockBase {
   public function build() {
 
     return \Drupal::formBuilder()->getForm('Drupal\boatmanagement\Form\ContactProprietaireForm');
+    return \Drupal::service('mail')->mail()
+    return \Drupal::mail()
   }
 
 }

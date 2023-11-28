@@ -33,4 +33,21 @@ class DemoController extends ControllerBase {
     return $build;
   }
 
+  public function demoservice(){
+    $monservice = \Drupal::service('demo_monservice');
+    $build = [
+      '#markup' => "path = " . $monservice->demo(),
+    ];
+    return $build;
+  }
+
+  public function demoplugin(){
+    $type = \Drupal::service('demo.plugin.manager.formation');
+    $plugin = $type->createInstance('visio');
+    $build = [
+      '#markup' => $plugin->slogan(),
+    ];
+    return $build;
+  }
+
 }

@@ -1,0 +1,5 @@
+entity.configapi.add_form:
+  route_name: 'entity.configapi.add_form'
+  title: 'Add configapi'
+  appears_on:
+    - entity.configapi.collection
