@@ -8,10 +8,8 @@ Cet exercice a pour objectif :
 ## Modifier le formulaire pour envoyer un email au propriétaire en cas de modification de la fiche de son bateau 
 * Dans le fichier monmodule.module, nous allons ajouter un hook pour modifier le formulaire et appeler une nouvelle fonction qui sera en charge d'envoyer un mail au propriétaire du bateau.
 ```
-function boatmanagement_form_alter(&$form, &$form_state, $form_id){
-  if($form_id == 'node_bateau_edit_form'){
+function boatmanagement_form_node_bateau_edit_form_alter(&$form, &$form_state, $form_id){
     $form['actions']['submit']['#submit'][] = 'bateau_edit_send_email';
-  }
 }
 ```
 * Puis nous déclarons dans le même fichier la fonction appelée :
@@ -52,7 +50,7 @@ function bateau_edit_send_email(&$form, &$form_state){
 
   $destinataire = $proprietaire->getEmail();
   //On envoie le mail avec toutes les infos dont on a besoin
-  $mailer->mail('boatmanagement', 'bateau_edit_send_email', $destinataire, $langcode, $params, $expediteur, $send=NULL );
+  $mailer->mail('boatmanagement', 'bateau_edit_send_email', $destinataire, $langcode, $params, $expediteur, $send=TRUE );
 }
 ```
 * Assurez vous que le nom des champs utilisé dans le code donné en exemple corresponde au nom des champs que vous utilisez dans votre module
@@ -62,7 +60,7 @@ function bateau_edit_send_email(&$form, &$form_state){
 ```
 function boatmanagement_mail($key, &$message, $params) {
   switch ($key) {
-    case 'send_owner_boat':
+    case 'bateau_edit_send_email':
       $message['subject'] = $params['subject'];
       $message['body'][] = $params['message'];
       break;
