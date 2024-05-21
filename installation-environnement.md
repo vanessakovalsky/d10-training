@@ -7,7 +7,7 @@ Cet exercice a pour but d'installer Drupal sur votre machine ou de lancer un con
 
 ### Pré-requis
 
-* Avoir un serveur web (apache, nginx, autre) installé et configuré
+* Avoir un serveur web (apache, nginx, autre) installé et configuré : si vous êtes sur une environnement AWS CLoud 9 : https://docs.aws.amazon.com/cloud9/latest/user-guide/sample-lamp.html 
 * Avoir la version de PHP installée et fonctionnelle correspondant à la version de Drupal que vous souhaitez installé, voir ici : https://www.drupal.org/docs/system-requirements 
 * Avoir une base de données installée et configurée 
 * Installer composer : https://getcomposer.org/download/ 
